@@ -42,19 +42,19 @@ jobs:
               run: |
                   poetry run pylint ./fast_api
 
-  build:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs: [run_tests]
+    build:
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/main'
+      needs: [run_tests]
 
-    steps:
-    - name: Login to Docker Hub
-      run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      steps:
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
 
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Build the Docker image
-      run: docker build . -t ${{ vars.DOCKER_PROJECT }}:${GITHUB_REF_NAME} -f Dockerfile .
-      
-    - name: Push image to Docker Hub
-      run: docker push ${{ vars.DOCKER_PROJECT }}:${GITHUB_REF_NAME}
+      - name: Build the Docker image
+        run: docker build . -t ${{ vars.DOCKER_PROJECT }}:${GITHUB_REF_NAME} -f Dockerfile .
+        
+      - name: Push image to Docker Hub
+        run: docker push ${{ vars.DOCKER_PROJECT }}:${GITHUB_REF_NAME}
